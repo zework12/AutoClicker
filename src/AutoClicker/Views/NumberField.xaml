@@ -1,0 +1,36 @@
+<UserControl x:Class="AutoClicker.Views.NumberField"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Height="32"
+             Focusable="False">
+
+  <Border x:Name="Chrome"
+          Style="{StaticResource FieldChrome}"
+          Cursor="IBeam"
+          MouseLeftButtonDown="OnChromeMouseDown">
+    <DockPanel Margin="11,0" LastChildFill="True">
+      <TextBlock x:Name="PrefixText"
+                 DockPanel.Dock="Left"
+                 Foreground="{StaticResource TextMuted}"
+                 FontSize="13"
+                 Margin="0,0,4,0"
+                 VerticalAlignment="Center"
+                 Visibility="Collapsed" />
+      <TextBlock x:Name="SuffixText"
+                 DockPanel.Dock="Right"
+                 Foreground="{StaticResource TextMuted}"
+                 FontSize="13"
+                 Margin="6,0,0,0"
+                 VerticalAlignment="Center"
+                 Visibility="Collapsed" />
+      <TextBox x:Name="Input"
+               Style="{StaticResource BareTextBox}"
+               MaxLength="12"
+               TextChanged="OnTextChanged"
+               PreviewTextInput="OnPreviewTextInput"
+               PreviewKeyDown="OnInputKeyDown"
+               GotKeyboardFocus="OnGotFocus"
+               LostKeyboardFocus="OnLostFocus" />
+    </DockPanel>
+  </Border>
+</UserControl>

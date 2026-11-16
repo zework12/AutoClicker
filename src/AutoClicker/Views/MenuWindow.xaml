@@ -1,0 +1,661 @@
+<Window x:Class="AutoClicker.Views.MenuWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:v="clr-namespace:AutoClicker.Views"
+        Title="Автокликер"
+        WindowStyle="None"
+        ResizeMode="CanMinimize"
+        SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource WindowBackground}"
+        SourceInitialized="OnSourceInitialized"
+        Closing="OnClosing"
+        IsVisibleChanged="OnVisibleChanged"
+        MouseDown="OnBackgroundMouseDown">
+
+  <WindowChrome.WindowChrome>
+    <WindowChrome CaptionHeight="40"
+                  GlassFrameThickness="0"
+                  ResizeBorderThickness="0"
+                  CornerRadius="0"
+                  UseAeroCaptionButtons="False" />
+  </WindowChrome.WindowChrome>
+
+  <Window.Resources>
+    <!-- Label column of a main settings row; the control takes the rest (440 - 152 = 288). -->
+    <GridLength x:Key="LabelWidth">152</GridLength>
+  </Window.Resources>
+
+  <Border x:Name="Root"
+          Width="704" Height="504"
+          Background="{StaticResource WindowBackground}"
+          BorderBrush="{StaticResource WindowBorder}"
+          BorderThickness="1"
+          UseLayoutRounding="True"
+          SnapsToDevicePixels="True"
+          Focusable="True"
+          FocusVisualStyle="{x:Null}"
+          TextElement.FontFamily="Segoe UI"
+          TextElement.FontSize="13"
+          TextElement.Foreground="{StaticResource TextPrimary}">
+    <Grid>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="208" />
+        <ColumnDefinition />
+      </Grid.ColumnDefinitions>
+
+      <!-- ================= Sidebar ================= -->
+      <Border Background="{StaticResource SidebarBackground}">
+        <DockPanel Margin="8,0,8,14">
+
+          <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Height="56" Margin="14,0,0,4">
+            <!-- A small cursor arrow as the app mark. -->
+            <Path Data="M 0,0 L 0,12 L 3.4,9 L 5.6,14 L 7.6,13.1 L 5.4,8.2 L 9.6,8.2 Z"
+                  Fill="{StaticResource Accent}"
+                  VerticalAlignment="Center"
+                  Margin="0,1,11,0" />
+            <TextBlock Text="Автокликер" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" />
+          </StackPanel>
+
+          <TextBlock x:Name="SidebarHint" DockPanel.Dock="Bottom"
+                     Style="{StaticResource Hint}" Foreground="{StaticResource TextFaint}"
+                     Margin="14,10,8,0" />
+
+          <RadioButton x:Name="NavSettings" DockPanel.Dock="Bottom" Style="{StaticResource NavItem}"
+                       Margin="0" WindowChrome.IsHitTestVisibleInChrome="True" Checked="OnNavChecked">
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="19" />
+                <ColumnDefinition />
+              </Grid.ColumnDefinitions>
+              <Ellipse x:Name="NavSettingsDot" Width="7" Height="7" Margin="0,1,0,0"
+                       HorizontalAlignment="Left" VerticalAlignment="Center" />
+              <TextBlock Grid.Column="1" Text="Настройки" VerticalAlignment="Center" />
+            </Grid>
+          </RadioButton>
+
+          <StackPanel>
+            <RadioButton x:Name="NavMouse" Style="{StaticResource NavItem}" Checked="OnNavChecked">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="19" />
+                  <ColumnDefinition />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Ellipse x:Name="NavMouseDot" Width="7" Height="7" Margin="0,1,0,0"
+                         HorizontalAlignment="Left" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Text="Мышь" VerticalAlignment="Center" />
+                <TextBlock x:Name="NavMouseKey" Grid.Column="2" Style="{StaticResource NavKey}" />
+              </Grid>
+            </RadioButton>
+
+            <RadioButton x:Name="NavKeyboard" Style="{StaticResource NavItem}" Checked="OnNavChecked">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="19" />
+                  <ColumnDefinition />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Ellipse x:Name="NavKeyboardDot" Width="7" Height="7" Margin="0,1,0,0"
+                         HorizontalAlignment="Left" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Text="Клавиатура" VerticalAlignment="Center" />
+                <TextBlock x:Name="NavKeyboardKey" Grid.Column="2" Style="{StaticResource NavKey}" />
+              </Grid>
+            </RadioButton>
+
+            <RadioButton x:Name="NavCamera" Style="{StaticResource NavItem}" Checked="OnNavChecked">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="19" />
+                  <ColumnDefinition />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Ellipse x:Name="NavCameraDot" Width="7" Height="7" Margin="0,1,0,0"
+                         HorizontalAlignment="Left" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Text="Камера" VerticalAlignment="Center" />
+                <TextBlock x:Name="NavCameraKey" Grid.Column="2" Style="{StaticResource NavKey}" />
+              </Grid>
+            </RadioButton>
+
+            <RadioButton x:Name="NavRandom" Style="{StaticResource NavItem}" Checked="OnNavChecked">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="19" />
+                  <ColumnDefinition />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Ellipse x:Name="NavRandomDot" Width="7" Height="7" Margin="0,1,0,0"
+                         HorizontalAlignment="Left" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Text="Случайный макрос" VerticalAlignment="Center" />
+                <TextBlock x:Name="NavRandomKey" Grid.Column="2" Style="{StaticResource NavKey}" />
+              </Grid>
+            </RadioButton>
+          </StackPanel>
+        </DockPanel>
+      </Border>
+
+      <!-- ================= Close ================= -->
+      <Button Grid.Column="1" Style="{StaticResource CaptionButton}"
+              HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,8,8,0"
+              Panel.ZIndex="1"
+              WindowChrome.IsHitTestVisibleInChrome="True"
+              ToolTip="Спрятать меню"
+              Click="OnCloseClick">
+        <Path Data="M 0,0 L 9,9 M 9,0 L 0,9"
+              Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+              StrokeThickness="1.3" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
+      </Button>
+
+      <!-- ================= Pages ================= -->
+      <Grid Grid.Column="1" Margin="28,22,28,24">
+
+        <!-- ================= Mouse ================= -->
+        <DockPanel x:Name="PageMouse">
+          <StackPanel DockPanel.Dock="Top" Margin="0,0,0,22">
+            <TextBlock Text="Мышь" Style="{StaticResource PageTitle}" />
+            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+              <Ellipse x:Name="MouseDot" Width="7" Height="7" Margin="0,1,8,0" VerticalAlignment="Center" />
+              <TextBlock x:Name="MouseStatus" FontSize="12.5" VerticalAlignment="Center" />
+            </StackPanel>
+          </StackPanel>
+
+          <Button x:Name="MouseStartButton" DockPanel.Dock="Bottom" Style="{StaticResource StartButton}"
+                  Click="OnMouseStartClick">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock x:Name="MouseStartText" Text="Старт" VerticalAlignment="Center" />
+              <Border x:Name="MouseStartCap" Style="{StaticResource KeyCap}">
+                <TextBlock x:Name="MouseStartKey" FontSize="11.5" FontWeight="Normal" />
+              </Border>
+            </StackPanel>
+          </Button>
+
+          <StackPanel>
+            <Grid Style="{StaticResource Row}">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{StaticResource LabelWidth}" />
+                <ColumnDefinition />
+              </Grid.ColumnDefinitions>
+              <TextBlock Text="Кнопка" Style="{StaticResource FieldLabel}" />
+              <ListBox x:Name="MouseButtonSeg" Grid.Column="1" Style="{StaticResource Segmented}"
+                       SelectionChanged="OnMouseChanged">
+                <ListBoxItem Content="Левая" />
+                <ListBoxItem Content="Правая" />
+                <ListBoxItem Content="Средняя" />
+              </ListBox>
+            </Grid>
+
+            <Grid Style="{StaticResource Row}">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{StaticResource LabelWidth}" />
+                <ColumnDefinition />
+              </Grid.ColumnDefinitions>
+              <TextBlock Text="Режим" Style="{StaticResource FieldLabel}" />
+              <ListBox x:Name="MouseModeSeg" Grid.Column="1" Style="{StaticResource Segmented}"
+                       SelectionChanged="OnMouseChanged">
+                <ListBoxItem Content="Клик" />
+                <ListBoxItem Content="Двойной" ToolTip="Два клика подряд на каждый интервал" />
+                <ListBoxItem Content="Зажать" ToolTip="Держать кнопку нажатой до остановки" />
+              </ListBox>
+            </Grid>
+
+            <Grid x:Name="MouseIntervalRow" Style="{StaticResource Row}">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{StaticResource LabelWidth}" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition Width="112" />
+              </Grid.ColumnDefinitions>
+              <TextBlock Text="Скорость" Style="{StaticResource FieldLabel}" />
+              <v:NumberField x:Name="MouseInterval" Grid.Column="1" ValueChanged="OnMouseIntervalChanged" />
+              <ListBox x:Name="MouseUnitSeg" Grid.Column="3" Style="{StaticResource Segmented}"
+                       SelectionChanged="OnMouseUnitChanged">
+                <ListBoxItem Content="мс" ToolTip="Миллисекунды между кликами" />
+                <ListBoxItem Content="к/с" ToolTip="Кликов в секунду" />
+              </ListBox>
+            </Grid>
+
+            <Grid Style="{StaticResource Row}">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{StaticResource LabelWidth}" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+              </Grid.ColumnDefinitions>
+              <TextBlock Text="Куда кликать" Style="{StaticResource FieldLabel}" />
+              <ListBox x:Name="MousePosSeg" Grid.Column="1" Style="{StaticResource Segmented}"
+                       SelectionChanged="OnMouseChanged">
+                <ListBoxItem Content="Где курсор" />
+                <ListBoxItem Content="В точку" />
+              </ListBox>
+              <!-- Shows the picked point; a click opens the picker. Only there in «В точку» mode. -->
+              <Button x:Name="MousePointButton" Grid.Column="2" Style="{StaticResource QuietButton}"
+                      Width="112" Margin="8,0,0,0" Padding="0"
+                      ToolTip="Выбрать точку на экране" Click="OnPickPointClick">
+                <StackPanel Orientation="Horizontal">
+                  <Path Data="M 6,0 L 6,12 M 0,6 L 12,6 M 6,2.5 A 3.5,3.5 0 1 1 5.99,2.5"
+                        Stroke="{StaticResource TextMuted}" StrokeThickness="1.2"
+                        VerticalAlignment="Center" Margin="0,0,8,0" />
+                  <TextBlock x:Name="MousePointText" VerticalAlignment="Center" />
+                </StackPanel>
+              </Button>
+            </Grid>
+
+            <ToggleButton x:Name="MouseMore" Style="{StaticResource AdvancedToggle}" Content="Дополнительно"
+                          Click="OnMoreClick" />
+            <UniformGrid x:Name="MouseMorePanel" Columns="2" Margin="0,0,-8,0" Visibility="Collapsed">
+              <StackPanel x:Name="MouseRandomRow" Style="{StaticResource Cell}">
+                <TextBlock Text="Случайный разброс" Style="{StaticResource CellLabel}"
+                           ToolTip="Каждый интервал случайно сдвигается в этих пределах" />
+                <v:NumberField x:Name="MouseRandom" Prefix="±" Suffix="мс" Maximum="10000" ValueChanged="OnMouseChanged" />
+              </StackPanel>
+              <StackPanel x:Name="MouseHoldRow" Style="{StaticResource Cell}">
+                <TextBlock Text="Нажатие длится" Style="{StaticResource CellLabel}"
+                           ToolTip="Сколько кнопка остаётся нажатой при каждом клике" />
+                <v:NumberField x:Name="MouseHold" Suffix="мс" Maximum="10000" ValueChanged="OnMouseChanged" />
+              </StackPanel>
+              <StackPanel Style="{StaticResource Cell}">
+                <TextBlock Text="Задержка старта" Style="{StaticResource CellLabel}" />
+                <v:NumberField x:Name="MouseDelay" Suffix="мс" Maximum="600000" ValueChanged="OnMouseChanged" />
+              </StackPanel>
+              <StackPanel x:Name="MouseLimitRow" Style="{StaticResource Cell}">
+                <TextBlock Text="Остановиться после" Style="{StaticResource CellLabel}"
+                           ToolTip="0 — кликать, пока не остановят" />
+                <v:NumberField x:Name="MouseLimit" Maximum="1000000000" ValueChanged="OnMouseChanged" />
+              </StackPanel>
+            </UniformGrid>
+          </StackPanel>
+        </DockPanel>
+
+        <!-- ================= Keyboard ================= -->
+        <DockPanel x:Name="PageKeyboard" Visibility="Collapsed">
+          <StackPanel DockPanel.Dock="Top" Margin="0,0,0,22">
+            <TextBlock Text="Клавиатура" Style="{StaticResource PageTitle}" />
+            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+              <Ellipse x:Name="KeyDot" Width="7" Height="7" Margin="0,1,8,0" VerticalAlignment="Center" />
+              <TextBlock x:Name="KeyStatus" FontSize="12.5" VerticalAlignment="Center" />
+            </StackPanel>
+          </StackPanel>
+
+          <Button x:Name="KeyStartButton" DockPanel.Dock="Bottom" Style="{StaticResource StartButton}"
+                  Click="OnKeyStartClick">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock x:Name="KeyStartText" Text="Старт" VerticalAlignment="Center" />
+              <Border x:Name="KeyStartCap" Style="{StaticResource KeyCap}">
+                <TextBlock x:Name="KeyStartKey" FontSize="11.5" FontWeight="Normal" />
+              </Border>
+            </StackPanel>
+          </Button>
+
+          <StackPanel>
+            <Grid Style="{StaticResource Row}">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{StaticResource LabelWidth}" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition Width="168" />
+              </Grid.ColumnDefinitions>
+              <TextBlock Text="Клавиша" Style="{StaticResource FieldLabel}" />
+              <v:KeyBox x:Name="KeyKeyBox" Grid.Column="1" Kind="SingleKey"
+                        ToolTip="Нажмите сюда, затем нужную клавишу. Esc — отмена"
+                        Changed="OnKeyChanged"
+                        CaptureStarted="OnCaptureStarted" CaptureEnded="OnCaptureEnded" />
+              <Border Grid.Column="3" Style="{StaticResource SegmentHost}"
+                      ToolTip="Зажимать вместе с клавишей">
+                <UniformGrid Rows="1">
+                  <ToggleButton x:Name="KeyCtrl" Content="Ctrl" Style="{StaticResource SegmentToggle}" Click="OnKeyChanged" />
+                  <ToggleButton x:Name="KeyShift" Content="Shift" Style="{StaticResource SegmentToggle}" Click="OnKeyChanged" />
+                  <ToggleButton x:Name="KeyAlt" Content="Alt" Style="{StaticResource SegmentToggle}" Click="OnKeyChanged" />
+                </UniformGrid>
+              </Border>
+            </Grid>
+
+            <Grid Style="{StaticResource Row}">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{StaticResource LabelWidth}" />
+                <ColumnDefinition />
+              </Grid.ColumnDefinitions>
+              <TextBlock Text="Режим" Style="{StaticResource FieldLabel}" />
+              <ListBox x:Name="KeyModeSeg" Grid.Column="1" Style="{StaticResource Segmented}"
+                       SelectionChanged="OnKeyChanged">
+                <ListBoxItem Content="Нажимать" ToolTip="Нажимать клавишу раз за разом" />
+                <ListBoxItem Content="Зажать" ToolTip="Держать клавишу нажатой до остановки" />
+              </ListBox>
+            </Grid>
+
+            <Grid x:Name="KeyIntervalRow" Style="{StaticResource Row}">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{StaticResource LabelWidth}" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition Width="112" />
+              </Grid.ColumnDefinitions>
+              <TextBlock Text="Интервал" Style="{StaticResource FieldLabel}" />
+              <v:NumberField x:Name="KeyInterval" Grid.Column="1" ValueChanged="OnKeyIntervalChanged" />
+              <ListBox x:Name="KeyUnitSeg" Grid.Column="3" Style="{StaticResource Segmented}"
+                       SelectionChanged="OnKeyUnitChanged">
+                <ListBoxItem Content="мс" ToolTip="Миллисекунды между нажатиями" />
+                <ListBoxItem Content="н/с" ToolTip="Нажатий в секунду" />
+              </ListBox>
+            </Grid>
+
+            <ToggleButton x:Name="KeyMore" Style="{StaticResource AdvancedToggle}" Content="Дополнительно"
+                          Click="OnMoreClick" />
+            <UniformGrid x:Name="KeyMorePanel" Columns="2" Margin="0,0,-8,0" Visibility="Collapsed">
+              <StackPanel x:Name="KeyRandomRow" Style="{StaticResource Cell}">
+                <TextBlock Text="Случайный разброс" Style="{StaticResource CellLabel}"
+                           ToolTip="Каждый интервал случайно сдвигается в этих пределах" />
+                <v:NumberField x:Name="KeyRandom" Prefix="±" Suffix="мс" Maximum="10000" ValueChanged="OnKeyChanged" />
+              </StackPanel>
+              <StackPanel x:Name="KeyHoldRow" Style="{StaticResource Cell}">
+                <TextBlock Text="Нажатие длится" Style="{StaticResource CellLabel}"
+                           ToolTip="Сколько клавиша остаётся нажатой при каждом нажатии" />
+                <v:NumberField x:Name="KeyHold" Suffix="мс" Maximum="10000" ValueChanged="OnKeyChanged" />
+              </StackPanel>
+              <StackPanel Style="{StaticResource Cell}">
+                <TextBlock Text="Задержка старта" Style="{StaticResource CellLabel}" />
+                <v:NumberField x:Name="KeyDelay" Suffix="мс" Maximum="600000" ValueChanged="OnKeyChanged" />
+              </StackPanel>
+              <StackPanel x:Name="KeyLimitRow" Style="{StaticResource Cell}">
+                <TextBlock Text="Остановиться после" Style="{StaticResource CellLabel}"
+                           ToolTip="0 — нажимать, пока не остановят" />
+                <v:NumberField x:Name="KeyLimit" Maximum="1000000000" ValueChanged="OnKeyChanged" />
+              </StackPanel>
+            </UniformGrid>
+          </StackPanel>
+        </DockPanel>
+
+        <!-- ================= Camera ================= -->
+        <DockPanel x:Name="PageCamera" Visibility="Collapsed">
+          <StackPanel DockPanel.Dock="Top" Margin="0,0,0,22">
+            <TextBlock Text="Камера" Style="{StaticResource PageTitle}" />
+            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+              <Ellipse x:Name="CamDot" Width="7" Height="7" Margin="0,1,8,0" VerticalAlignment="Center" />
+              <TextBlock x:Name="CamStatus" FontSize="12.5" VerticalAlignment="Center" />
+            </StackPanel>
+          </StackPanel>
+
+          <Button x:Name="CamStartButton" DockPanel.Dock="Bottom" Style="{StaticResource StartButton}"
+                  Click="OnCamStartClick">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock x:Name="CamStartText" Text="Старт" VerticalAlignment="Center" />
+              <Border x:Name="CamStartCap" Style="{StaticResource KeyCap}">
+                <TextBlock x:Name="CamStartKey" FontSize="11.5" FontWeight="Normal" />
+              </Border>
+            </StackPanel>
+          </Button>
+
+          <StackPanel>
+            <Grid Style="{StaticResource Row}">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{StaticResource LabelWidth}" />
+                <ColumnDefinition />
+              </Grid.ColumnDefinitions>
+              <TextBlock Text="Сдвиг" Style="{StaticResource FieldLabel}"
+                         ToolTip="На сколько сдвигается камера, в единицах движения мыши" />
+              <v:NumberField x:Name="CamDistance" Grid.Column="1" Suffix="px"
+                             Minimum="1" Maximum="2000" ValueChanged="OnCamChanged" />
+            </Grid>
+
+            <Grid Style="{StaticResource Row}">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{StaticResource LabelWidth}" />
+                <ColumnDefinition />
+              </Grid.ColumnDefinitions>
+              <TextBlock Text="Направление" Style="{StaticResource FieldLabel}" />
+              <ListBox x:Name="CamAxisSeg" Grid.Column="1" Style="{StaticResource Segmented}"
+                       SelectionChanged="OnCamChanged">
+                <ListBoxItem Content="Горизонталь" ToolTip="Влево-вправо" />
+                <ListBoxItem Content="Вертикаль" ToolTip="Вверх-вниз" />
+                <ListBoxItem Content="Обе" ToolTip="По обеим осям сразу" />
+              </ListBox>
+            </Grid>
+
+            <Grid Style="{StaticResource Row}">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{StaticResource LabelWidth}" />
+                <ColumnDefinition />
+              </Grid.ColumnDefinitions>
+              <TextBlock Text="Повторять каждые" Style="{StaticResource FieldLabel}" />
+              <v:NumberField x:Name="CamInterval" Grid.Column="1" Suffix="сек" Decimals="1"
+                             Minimum="0.5" Maximum="3600" ValueChanged="OnCamChanged" />
+            </Grid>
+
+            <ToggleButton x:Name="CamMore" Style="{StaticResource AdvancedToggle}" Content="Дополнительно"
+                          Click="OnMoreClick" />
+            <UniformGrid x:Name="CamMorePanel" Columns="3" Margin="0,0,-8,0" Visibility="Collapsed">
+              <StackPanel Style="{StaticResource Cell}">
+                <TextBlock Text="Случайный разброс" Style="{StaticResource CellLabel}"
+                           ToolTip="Каждый интервал случайно сдвигается в этих пределах" />
+                <v:NumberField x:Name="CamRandom" Prefix="±" Suffix="сек" Decimals="1" Maximum="600" ValueChanged="OnCamChanged" />
+              </StackPanel>
+              <StackPanel Style="{StaticResource Cell}">
+                <TextBlock Text="Плавность" Style="{StaticResource CellLabel}"
+                           ToolTip="Сколько длится движение в одну сторону. Больше — плавнее" />
+                <v:NumberField x:Name="CamMove" Suffix="мс" Maximum="5000" ValueChanged="OnCamChanged" />
+              </StackPanel>
+              <StackPanel Style="{StaticResource Cell}">
+                <TextBlock Text="Пауза до возврата" Style="{StaticResource CellLabel}"
+                           ToolTip="Пауза перед тем, как камера вернётся на место" />
+                <v:NumberField x:Name="CamHold" Suffix="мс" Maximum="10000" ValueChanged="OnCamChanged" />
+              </StackPanel>
+              <StackPanel Style="{StaticResource Cell}">
+                <TextBlock Text="Задержка старта" Style="{StaticResource CellLabel}" />
+                <v:NumberField x:Name="CamDelay" Suffix="мс" Maximum="600000" ValueChanged="OnCamChanged" />
+              </StackPanel>
+              <StackPanel Style="{StaticResource Cell}">
+                <TextBlock Text="Остановиться после" Style="{StaticResource CellLabel}"
+                           ToolTip="0 — пока не остановят" />
+                <v:NumberField x:Name="CamLimit" Maximum="1000000000" ValueChanged="OnCamChanged" />
+              </StackPanel>
+              <StackPanel Style="{StaticResource Cell}">
+                <TextBlock Text="Случайная сторона" Style="{StaticResource CellLabel}"
+                           ToolTip="Каждый раз случайно выбирать, в какую сторону сдвигать. Выключено — всегда в одну" />
+                <Grid Height="32">
+                  <CheckBox x:Name="CamRandomSwitch" Style="{StaticResource Switch}"
+                            HorizontalAlignment="Left" Click="OnCamChanged" />
+                </Grid>
+              </StackPanel>
+            </UniformGrid>
+          </StackPanel>
+        </DockPanel>
+
+        <!-- ================= Random macro ================= -->
+        <DockPanel x:Name="PageRandom" Visibility="Collapsed">
+          <StackPanel DockPanel.Dock="Top" Margin="0,0,0,22">
+            <TextBlock Text="Случайный макрос" Style="{StaticResource PageTitle}" />
+            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+              <Ellipse x:Name="RndDot" Width="7" Height="7" Margin="0,1,8,0" VerticalAlignment="Center" />
+              <TextBlock x:Name="RndStatus" FontSize="12.5" VerticalAlignment="Center" />
+            </StackPanel>
+          </StackPanel>
+
+          <Button x:Name="RndStartButton" DockPanel.Dock="Bottom" Style="{StaticResource StartButton}"
+                  Click="OnRndStartClick">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock x:Name="RndStartText" Text="Случайный макрос" VerticalAlignment="Center" />
+              <Border x:Name="RndStartCap" Style="{StaticResource KeyCap}">
+                <TextBlock x:Name="RndStartKey" FontSize="11.5" FontWeight="Normal" />
+              </Border>
+            </StackPanel>
+          </Button>
+
+          <StackPanel>
+            <Grid Style="{StaticResource Row}">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{StaticResource LabelWidth}" />
+                <ColumnDefinition />
+              </Grid.ColumnDefinitions>
+              <TextBlock Text="Размах" Style="{StaticResource FieldLabel}"
+                         ToolTip="Размер области, в которой блуждает мышь, в единицах движения мыши" />
+              <v:NumberField x:Name="RndRadius" Grid.Column="1" Suffix="px"
+                             Minimum="1" Maximum="5000" ValueChanged="OnRndChanged" />
+            </Grid>
+
+            <Grid Style="{StaticResource Row}">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{StaticResource LabelWidth}" />
+                <ColumnDefinition />
+              </Grid.ColumnDefinitions>
+              <TextBlock Text="Скорость движения" Style="{StaticResource FieldLabel}"
+                         ToolTip="Сколько в среднем длится одно движение. Меньше — быстрее" />
+              <v:NumberField x:Name="RndMove" Grid.Column="1" Suffix="мс"
+                             Minimum="20" Maximum="10000" ValueChanged="OnRndChanged" />
+            </Grid>
+
+            <Grid Style="{StaticResource Row}">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{StaticResource LabelWidth}" />
+                <ColumnDefinition />
+              </Grid.ColumnDefinitions>
+              <TextBlock Text="Пауза" Style="{StaticResource FieldLabel}"
+                         ToolTip="Пауза между движениями" />
+              <v:NumberField x:Name="RndPause" Grid.Column="1" Suffix="мс"
+                             Minimum="1" Maximum="600000" ValueChanged="OnRndChanged" />
+            </Grid>
+
+            <ToggleButton x:Name="RndMore" Style="{StaticResource AdvancedToggle}" Content="Дополнительно"
+                          Click="OnMoreClick" />
+            <UniformGrid x:Name="RndMorePanel" Columns="3" Margin="0,0,-8,0" Visibility="Collapsed">
+              <StackPanel Style="{StaticResource Cell}">
+                <TextBlock Text="Разброс паузы" Style="{StaticResource CellLabel}"
+                           ToolTip="Каждая пауза случайно сдвигается в этих пределах" />
+                <v:NumberField x:Name="RndRandom" Prefix="±" Suffix="мс" Maximum="600000" ValueChanged="OnRndChanged" />
+              </StackPanel>
+              <StackPanel Style="{StaticResource Cell}">
+                <TextBlock Text="Задержка старта" Style="{StaticResource CellLabel}" />
+                <v:NumberField x:Name="RndDelay" Suffix="мс" Maximum="600000" ValueChanged="OnRndChanged" />
+              </StackPanel>
+              <StackPanel Style="{StaticResource Cell}">
+                <TextBlock Text="И по вертикали" Style="{StaticResource CellLabel}"
+                           ToolTip="Двигать мышь и по вертикали (слабее, чем по горизонтали)" />
+                <Grid Height="32">
+                  <CheckBox x:Name="RndVerticalSwitch" Style="{StaticResource Switch}"
+                            HorizontalAlignment="Left" Click="OnRndChanged" />
+                </Grid>
+              </StackPanel>
+            </UniformGrid>
+          </StackPanel>
+        </DockPanel>
+
+        <!-- ================= Settings ================= -->
+        <DockPanel x:Name="PageSettings" Visibility="Collapsed">
+          <TextBlock DockPanel.Dock="Top" Text="Настройки" Style="{StaticResource PageTitle}" Margin="0,0,0,18" />
+
+          <Button DockPanel.Dock="Bottom" Style="{StaticResource QuietButton}" HorizontalAlignment="Left"
+                  Foreground="{StaticResource TextSecondary}"
+                  Content="Выйти из программы" ToolTip="Остановить всё и закрыть автокликер"
+                  Click="OnExitClick" />
+
+          <StackPanel>
+            <Grid Height="40" Margin="0,0,0,16">
+              <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="Только в окне игры" Style="{StaticResource FieldLabel}" Foreground="{StaticResource TextPrimary}" />
+                <TextBlock Text="Переключились в другое окно — всё встаёт на паузу."
+                           Style="{StaticResource Hint}" Margin="0,3,0,0" />
+              </StackPanel>
+              <CheckBox x:Name="LockSwitch" Style="{StaticResource Switch}" Click="OnLockChanged" />
+            </Grid>
+
+            <TextBlock Text="ГОРЯЧИЕ КЛАВИШИ" Style="{StaticResource SectionTitle}" Margin="0,0,0,10" />
+            <UniformGrid Columns="3" Margin="0,0,-8,0">
+              <StackPanel Style="{StaticResource Cell}">
+                <TextBlock Text="Мышь" Style="{StaticResource CellLabel}" />
+                <v:KeyBox x:Name="HotMouse" Kind="Hotkey" Changed="OnHotkeyChanged"
+                          CaptureStarted="OnCaptureStarted" CaptureEnded="OnCaptureEnded" />
+              </StackPanel>
+              <StackPanel Style="{StaticResource Cell}">
+                <TextBlock Text="Клавиатура" Style="{StaticResource CellLabel}" />
+                <v:KeyBox x:Name="HotKeyboard" Kind="Hotkey" Changed="OnHotkeyChanged"
+                          CaptureStarted="OnCaptureStarted" CaptureEnded="OnCaptureEnded" />
+              </StackPanel>
+              <StackPanel Style="{StaticResource Cell}">
+                <TextBlock Text="Камера" Style="{StaticResource CellLabel}" />
+                <v:KeyBox x:Name="HotCamera" Kind="Hotkey" Changed="OnHotkeyChanged"
+                          CaptureStarted="OnCaptureStarted" CaptureEnded="OnCaptureEnded" />
+              </StackPanel>
+              <StackPanel Style="{StaticResource Cell}">
+                <TextBlock Text="Случайный макрос" Style="{StaticResource CellLabel}" />
+                <v:KeyBox x:Name="HotRandom" Kind="Hotkey" Changed="OnHotkeyChanged"
+                          CaptureStarted="OnCaptureStarted" CaptureEnded="OnCaptureEnded" />
+              </StackPanel>
+              <StackPanel Style="{StaticResource Cell}">
+                <TextBlock Text="Показать / скрыть меню" Style="{StaticResource CellLabel}" />
+                <v:KeyBox x:Name="HotMenu" Kind="Hotkey" Changed="OnHotkeyChanged"
+                          CaptureStarted="OnCaptureStarted" CaptureEnded="OnCaptureEnded" />
+              </StackPanel>
+            </UniformGrid>
+            <!-- Hotkey trouble (taken by another program, two the same) and a failed save. -->
+            <TextBlock x:Name="SettingsProblem"
+                       Foreground="{StaticResource Danger}" FontSize="12"
+                       TextWrapping="Wrap" MaxHeight="34" TextTrimming="CharacterEllipsis"
+                       Margin="0,0,0,8" Visibility="Collapsed" />
+
+            <Grid Height="24" Margin="0,8,0,10">
+              <TextBlock Text="ОВЕРЛЕЙ" Style="{StaticResource SectionTitle}" />
+              <CheckBox x:Name="OverlaySwitch" Style="{StaticResource Switch}"
+                        ToolTip="Показывать оверлей поверх игры" Click="OnOverlayChanged" />
+            </Grid>
+            <UniformGrid Columns="2" Margin="0,0,-8,0">
+              <StackPanel x:Name="CornerRow" Style="{StaticResource Cell}">
+                <TextBlock Text="Угол экрана" Style="{StaticResource CellLabel}" />
+                <ListBox x:Name="CornerSeg" Style="{StaticResource Segmented}" SelectionChanged="OnOverlayChanged">
+                  <ListBox.Resources>
+                    <Style x:Key="Screen" TargetType="Border">
+                      <Setter Property="Width" Value="18" />
+                      <Setter Property="Height" Value="13" />
+                      <Setter Property="CornerRadius" Value="2.5" />
+                      <Setter Property="BorderThickness" Value="1" />
+                      <Setter Property="Padding" Value="2" />
+                      <Setter Property="BorderBrush" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" />
+                    </Style>
+                    <Style x:Key="Mark" TargetType="Rectangle">
+                      <Setter Property="Width" Value="6" />
+                      <Setter Property="Height" Value="3" />
+                      <Setter Property="RadiusX" Value="1" />
+                      <Setter Property="RadiusY" Value="1" />
+                      <Setter Property="Fill" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" />
+                    </Style>
+                  </ListBox.Resources>
+                  <ListBoxItem ToolTip="Слева сверху">
+                    <Border Style="{StaticResource Screen}">
+                      <Rectangle Style="{StaticResource Mark}" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    </Border>
+                  </ListBoxItem>
+                  <ListBoxItem ToolTip="Справа сверху">
+                    <Border Style="{StaticResource Screen}">
+                      <Rectangle Style="{StaticResource Mark}" HorizontalAlignment="Right" VerticalAlignment="Top" />
+                    </Border>
+                  </ListBoxItem>
+                  <ListBoxItem ToolTip="Слева снизу">
+                    <Border Style="{StaticResource Screen}">
+                      <Rectangle Style="{StaticResource Mark}" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+                    </Border>
+                  </ListBoxItem>
+                  <ListBoxItem ToolTip="Справа снизу">
+                    <Border Style="{StaticResource Screen}">
+                      <Rectangle Style="{StaticResource Mark}" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
+                    </Border>
+                  </ListBoxItem>
+                </ListBox>
+              </StackPanel>
+              <StackPanel x:Name="OpacityRow" Style="{StaticResource Cell}">
+                <TextBlock Text="Прозрачность" Style="{StaticResource CellLabel}" />
+                <Grid Height="32">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="40" />
+                  </Grid.ColumnDefinitions>
+                  <Slider x:Name="OpacitySlider" Style="{StaticResource SettingsSlider}"
+                          Minimum="0" Maximum="80" SmallChange="5" LargeChange="10"
+                          ValueChanged="OnOverlayChanged" />
+                  <TextBlock x:Name="OpacityText" Grid.Column="1"
+                             Foreground="{StaticResource TextMuted}"
+                             HorizontalAlignment="Right" VerticalAlignment="Center" />
+                </Grid>
+              </StackPanel>
+            </UniformGrid>
+          </StackPanel>
+        </DockPanel>
+      </Grid>
+    </Grid>
+  </Border>
+</Window>

@@ -1,0 +1,33 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- Surfaces: three steps of the same blue-grey, no outlines between them. -->
+  <SolidColorBrush x:Key="WindowBackground" Color="#11151D" />
+  <SolidColorBrush x:Key="SidebarBackground" Color="#0B0E14" />
+  <SolidColorBrush x:Key="WindowBorder" Color="#222A38" />
+  <SolidColorBrush x:Key="Hairline" Color="#1D2431" />
+
+  <SolidColorBrush x:Key="FieldBackground" Color="#1A202C" />
+  <SolidColorBrush x:Key="FieldHover" Color="#1F2634" />
+  <SolidColorBrush x:Key="SegmentSelected" Color="#303A4E" />
+  <SolidColorBrush x:Key="NavSelected" Color="#181E2A" />
+
+  <SolidColorBrush x:Key="TextPrimary" Color="#E8ECF4" />
+  <SolidColorBrush x:Key="TextSecondary" Color="#B4BCCB" />
+  <SolidColorBrush x:Key="TextMuted" Color="#7C859A" />
+  <SolidColorBrush x:Key="TextFaint" Color="#4F586C" />
+
+  <!-- The one accent; green / amber / red are reserved for state. -->
+  <SolidColorBrush x:Key="Accent" Color="#5B8DEF" />
+  <SolidColorBrush x:Key="Danger" Color="#E8695F" />
+  <SolidColorBrush x:Key="DangerFill" Color="#C24A41" />
+  <SolidColorBrush x:Key="Success" Color="#4CCB7C" />
+  <SolidColorBrush x:Key="Warning" Color="#E2A655" />
+
+  <SolidColorBrush x:Key="ButtonBackground" Color="#1E2533" />
+
+  <!-- The overlay sits on top of a game, so it stays translucent. -->
+  <SolidColorBrush x:Key="OverlayBackground" Color="#E60F131B" />
+  <SolidColorBrush x:Key="OverlayBorder" Color="#24FFFFFF" />
+
+</ResourceDictionary>
